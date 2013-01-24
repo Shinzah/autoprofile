@@ -1,0 +1,71 @@
+/** 
+ * Arnaud KEIFLIN (arnaud@keiflin.fr), 10 sept. 2010
+ *
+ * Project : AutoProfile
+ * Package location: com.shinsoft.autoprofile.adapter
+ * File name: IconAdapter.java
+ *
+ * Comments :
+ **/
+
+
+package com.shinsoft.autoprofile.adapter;
+
+import android.app.Activity;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+
+import com.shinsoft.autoprofile.AutoProfile;
+import com.shinsoft.autoprofile.R;
+import com.shinsoft.autoprofile.manager.Constants;
+
+@SuppressWarnings("rawtypes")
+public class IconAdapter extends ArrayAdapter
+{
+	private static final String TAG = AutoProfile.class.getSimpleName();
+	
+	private Activity context;
+	
+	@SuppressWarnings("unchecked")
+	public IconAdapter(Activity context)
+	{
+		super(context, R.layout.profileicon_gridview, Constants.PROFILEICON_RESOURCESNAME_LIST);
+		this.context = context;
+	}
+	
+	/**
+	 * Create a simple ImageView when needed
+	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+	 * @since 1.0
+	 */
+	@Override
+	public View getView(int position, View view, ViewGroup parent)
+	{
+		ImageView iconView = (ImageView) view;
+		try
+		{
+			if (iconView == null)
+			{
+				int iconId = Constants.PROFILEICON_RESOURCES_LIST[position];
+				String iconName = Constants.PROFILEICON_NAME_LIST[position];
+				iconView = new ImageView(context);
+				iconView.setLayoutParams(new GridView.LayoutParams(65, 65));
+				iconView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				iconView.setPadding(5, 5, 5, 5);
+				iconView.setImageResource(iconId);
+				iconView.setTag(R.id.iconresname,iconName);
+			}
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG, "<!> An error append while configuring iconView <!>",e);
+		}
+		
+		return (iconView);
+	}
+	
+}

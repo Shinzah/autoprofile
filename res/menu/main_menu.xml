@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item 
+		android:id="@+id/MenuItem_MainMenuAddProfile" 
+		android:icon="@android:drawable/ic_menu_add"
+		android:title="@string/AutoProfileOptionMenuAdd" />
+
+	<item 
+		android:id="@+id/MenuItem_MainMenuSortProfile" 
+		android:icon="@android:drawable/ic_menu_sort_by_size"
+		android:title="@string/AutoProfileOptionMenuSort">
+
+		<menu>
+			<item 
+				android:id="@+id/MenuItem_SubMenuSortByPriorityAsc" 
+				android:title="@string/AutoProfileOptionSubMenuSortByPriorityAsc"/>
+			<item 
+				android:id="@+id/MenuItem_SubMenuSortByPriorityDesc" 
+				android:title="@string/AutoProfileOptionSubMenuSortByPriorityDesc" />
+
+			<item 
+				android:id="@+id/MenuItem_SubMenuSortByNameAsc" 
+				android:title="@string/AutoProfileOptionSubMenuSortByNameAsc" />
+			<item 
+				android:id="@+id/MenuItem_SubMenuSortByNameDesc" 
+				android:title="@string/AutoProfileOptionSubMenuSortByNameDesc" />
+		</menu>
+
+
+	</item>
+
+	<item 
+		android:id="@+id/MenuItem_MainMenuPreference" 
+		android:icon="@android:drawable/ic_menu_preferences"
+		android:title="@string/AutoProfileOptionMenuPref" />
+
+	<item 
+		android:id="@+id/MenuItem_MainMenuHelp" 
+		android:icon="@android:drawable/ic_menu_help"
+		android:title="@string/AutoProfileOptionMenuHelp" />
+
+	<item 
+		android:id="@+id/MenuItem_MainMenuAbout" 
+		android:icon="@android:drawable/ic_menu_info_details"
+		android:title="@string/AutoProfileOptionMenuAbout" />
+
+</menu>

@@ -1,0 +1,176 @@
+/** 
+ * Interface Technologies (c), 2010
+ * Arnaud KEIFLIN (arnaud.keiflin@interface-tech.com), 1 oct. 2010
+ *
+ * Project : AutoProfile
+ * Package location: com.shinsoft.autoprofile.parameter.utils
+ * File name: ParameterProcessor.java
+ *
+ * Comments :
+ **/
+
+
+package com.shinsoft.autoprofile.parameter.utils;
+
+import java.util.Collections;
+import java.util.List;
+
+import android.app.NotificationManager;
+import android.content.Context;
+import android.media.AudioManager;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.shinsoft.autoprofile.AutoProfile;
+import com.shinsoft.autoprofile.R;
+import com.shinsoft.autoprofile.parameter.VolumeParameter;
+import com.shinsoft.autoprofile.profile.ProfileComparator;
+import com.shinsoft.autoprofile.profile.ProfileInfo;
+import com.shinsoft.autoprofile.service.AutoProfileService;
+
+/**
+ * Utility class for parameters processing and appliance
+ * <br>
+ * Versions : <br>
+ *
+ *   <li>1.0 : Initialisation</li>
+ * <br>
+ * @author Arnaud KEIFLIN (arnaud.keiflin@interface-tech.com)
+ * @version 1.0
+ */
+public class ParameterProcessor
+{
+	private static final String TAG = AutoProfileService.class.getSimpleName();
+	
+	/**
+	 * Compute and process parameters depending of list parameters given
+	 * @param listParameters
+	 * @since 1.0
+	 * @author Arnaud KEIFLIN (arnaud.keiflin@interface-tech.com)
+	 */
+	public static void processParameters(Context context, List<ProfileInfo> listProfile)
+	{
+		boolean debugMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getResources().getString(R.string.PreferenceItemKey_DebugMode),false);
+		
+		if (debugMode)
+			Log.d(TAG,"Processing parameters ...");
+		
+		// Build a new ParameterRecap object
+		ParameterRecap paramRecap = new ParameterRecap();
+		
+		// Order profile by priority ASC (0 -> 50)
+		Collections.sort(listProfile,new ProfileComparator(ProfileComparator.SORT_BY_NAME_ASC));
+		
+		// Loop on all profile to apply parameters
+		for (ProfileInfo currentProfile : listProfile)
+		{
+			List<ProfileParameter> listParameters = currentProfile.getListParameters();
+			if (listParameters != null && !listParameters.isEmpty())
+			{
+				// Let ParameterRecap make the work for us
+				for (ProfileParameter parameter : listParameters)
+				{
+					paramRecap.fillParameter(parameter);
+				}
+			}
+		}
+		
+		// Now we have a fullfilled ParameterRecap, apply all parameters
+		applyParameters(context, paramRecap, debugMode);
+	}
+
+	
+	private static void applyParameters(Context context,ParameterRecap paramRecap,boolean debugMode)
+	{
+		if (debugMode)
+			Log.d(TAG,"Applying parameters...");
+		
+		// Applying volume
+		if (paramRecap.applyMainVolume || paramRecap.applyMediaVolume 
+						|| paramRecap.applyAlarmVolume || paramRecap.applyCallVolume
+						|| paramRecap.applyRingVolume)
+		{
+			if (debugMode)
+				Log.d(TAG,"Applying volume parameters");
+			
+			AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+			
+			if (paramRecap.applyMainVolume)
+				mAudioManager.setStreamVolume(AudioManager.STREAM_SYSTEM,paramRecap.mainVolume,0);
+			
+			if (paramRecap.applyMediaVolume)
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,paramRecap.mediaVolume,0);
+			
+			if (paramRecap.applyAlarmVolume)
+				mAudioManager.setStreamVolume(AudioManager.STREAM_ALARM,paramRecap.alarmVolume,0);
+			
+			if (paramRecap.applyCallVolume)
+				mAudioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,paramRecap.callVolume,0);
+			
+			if (paramRecap.applyRingVolume)
+				mAudioManager.setStreamVolume(AudioManager.STREAM_RING,paramRecap.ringVolume,0);
+		}
+	}
+	
+	/**
+	 * Static class which recapitulate all parameters to apply
+	 * <br>
+	 * Versions : <br>
+	 *
+	 *   <li>1.0 : Initialisation</li>
+	 * <br>
+	 * @author Arnaud KEIFLIN (arnaud.keiflin@interface-tech.com)
+	 * @version 1.0
+	 */
+	static class ParameterRecap
+	{
+		// Volume informations
+		boolean applyMainVolume;
+		int mainVolume;
+		boolean applyMediaVolume;
+		int mediaVolume;
+		boolean applyAlarmVolume;
+		int alarmVolume;
+		boolean applyCallVolume;
+		int callVolume;
+		boolean applyRingVolume;
+		int ringVolume;
+		
+		ParameterRecap() { }
+		
+		
+		/**
+		 * Add profileParameter parameters into current object
+		 * @param parameter
+		 * @since 1.0
+		 * @author Arnaud KEIFLIN (arnaud.keiflin@interface-tech.com)
+		 */
+		protected void fillParameter(ProfileParameter parameter)
+		{
+			switch (parameter.getClassId())
+			{
+				case VolumeParameter.CLASSID :
+				{
+					VolumeParameter volumeParameter = (VolumeParameter)parameter;
+					this.applyMainVolume = volumeParameter.isDefineMainVolume();
+					this.mainVolume = volumeParameter.getMainVolume();
+					
+					this.applyMediaVolume = volumeParameter.isDefineMediaVolume();
+					this.mediaVolume = volumeParameter.getMediaVolume();
+					
+					this.applyAlarmVolume = volumeParameter.isDefineAlarmVolume();
+					this.alarmVolume = volumeParameter.getAlarmVolume();
+					
+					this.applyCallVolume = volumeParameter.isDefineCallVolume();
+					this.callVolume = volumeParameter.getCallVolume();
+					
+					this.applyRingVolume = volumeParameter.isDefineRingVolume();
+					this.ringVolume = volumeParameter.getRingVolume();
+					
+					break;
+				}
+			}
+		}
+	}
+	
+}

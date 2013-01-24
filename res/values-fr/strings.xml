@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Application resources -->
+    <string name="app_name">AutoProfile</string>
+    <string name="version">0.1</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="apply">Appliquer</string>
+    <string name="cancel">Annuler</string>
+    <string name="activate">Activer</string>
+    <string name="desactivate">Desactiver</string>
+    
+    <string name="loading">Chargement en cours</string>
+    <string name="please_wait">Veuillez patienter ...</string>
+    
+    <!-- AutoProfile resources -->
+    <string name="ListProfiles">Liste des profiles</string>
+    
+    <!-- Default profile resources -->
+    <string name="DefaultProfileName">Par défaut</string>
+    <string name="ConditionsSummary_DefaultProfile">Profile par défaut</string>
+    
+    <string name="ListProfiles_ProfileSavedToastMsg">Profile \'%1$s\' sauvegardé ...</string>
+    <string name="ListProfiles_ProfileDeletedToastMsg">Profile \'%1$s\' supprimé ...</string>
+    
+    <!-- SaveProfileDialogActivity resources -->
+    <string name="SaveProfile_Question">Vous avez effectué des modifications sur le profile, souhaitez vous sauvegarder ces modifications ?</string>
+    
+    <!-- ManageProfileActivity Tabs -->
+    <string name="ManageProfile_TabGeneral">Général</string>
+    <string name="ManageProfile_TabConditions">Conditions</string>
+    <string name="ManageProfile_TabParameters">Paramétres</string>
+    
+    <!-- ManageProfileActivity Tab 'General' -->
+    <string name="ManageProfileNameLabel">Nom du profile</string>
+    <string name="ManageProfileIconLabel">Icone du profile</string>
+    <string name="ManageProfilePriorityLabel">Priorité</string>
+    
+    <!-- ManageProfileActivity Tab 'Conditions' -->
+    <string name="ManageProfile_ListConditionsLabel">Liste des conditions</string>
+    <string name="ManageProfile_ListConditionsAdd">Ajouter une condition</string>
+    <string name="ManageProfile_ListConditionsEmpty">Aucune condition disponible</string>
+    <string name="Condition_DefaultProfileExplain">AutoProfile activera le profile par défaut dans le cas où aucun autre profile n\'est activable.</string>
+    
+    <!-- ManageProfileActivity Tab 'Parameters' -->
+    <string name="ManageProfile_ListParametersLabel">Liste des paramétres</string>
+    <string name="ManageProfile_ListParametersAdd">Ajouter un paramétre</string>
+    <string name="ManageProfile_ListParametersEmpty">Aucun parametre disponible</string>
+    
+    <!-- TimeCondition Activity -->
+    <string name="TimeConditionFrom">Début</string>
+    <string name="TimeConditionTo">Fin</string>
+    
+    <!-- DateCondition Activity -->
+    <string name="DateConditionFrom">Du</string>
+    <string name="DateConditionTo">Au</string>
+    
+    <!-- BatteryCondition Activity -->
+    <string name="BatteryConditionInChargeLabel">En charge</string>
+    <string name="BatteryConditionPercentLabel">Niveau de la batterie</string>
+    <string name="BatteryConditionPercentLowerLabel">Moins de</string>
+    <string name="BatteryConditionPercentHigherLabel">Plus de</string>
+    
+    <!-- VolumeParameter Activity -->
+    <string name="VolumeParameterMainVolumeLabel">Volume principal</string>
+    <string name="VolumeParameterMediaVolumeLabel">Volume media</string>
+    <string name="VolumeParameterAlarmVolumeLabel">Volume alarme</string>
+    
+    <!-- IconSelectDialog resources -->
+    <string name="IconSelectDialogTitle">Icone du profile</string>
+    
+    <!-- Error resources -->
+    <string name="ErrorEmptyProfileName">Veuillez saisir le nom du profile</string>
+    
+    <!-- Conditions resources -->
+    <string name="ConditionName_TimeCondition">Horaire</string>
+    	<string name="ConditionExplain_TimeCondition">Définissez le crénau horaire d\'activation du profile</string>
+    	<string name="ConditionSummary_TimeCondition">De %1$s à %2$s</string>
+    <string name="ConditionName_DateCondition">Date</string>
+		<string name="ConditionExplain_DateCondition">Définissez la période d\'activation de votre profile</string>
+    	<string name="ConditionSummary_DateCondition">Du %1$s au %2$s</string>
+    <string name="ConditionName_BatteryCondition">Alimentation</string>
+    	<string name="ConditionExplain_BatteryCondition">Définissez le status d\'alimentation necessaire à l\'activation de votre profile</string>
+    	<string name="ConditionSummary_BatteryCondition_InCharge">En charge</string>
+    	<string name="ConditionSummary_BatteryCondition_PercentLower">Batterie &lt; %1$s pourcent</string>
+    	<string name="ConditionSummary_BatteryCondition_PercentHigher">Batterie &gt; %1$s pourcent</string>
+    	
+   	<!-- Parameters resources -->
+   	<string name="ParameterName_VolumeParameter">Volume</string>
+</resources>

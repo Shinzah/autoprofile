@@ -1,0 +1,204 @@
+/** 
+ * Arnaud KEIFLIN (arnaud@keiflin.fr), 17 sept. 2010
+ *
+ * Project : AutoProfile
+ * Package location: com.shinsoft.autoprofile
+ * File name: VolumeParameter.java
+ *
+ * Comments :
+ **/
+
+
+package com.shinsoft.autoprofile.parameter;
+
+import java.util.StringTokenizer;
+
+import android.app.Activity;
+import android.util.Log;
+
+import com.shinsoft.autoprofile.AutoProfile;
+import com.shinsoft.autoprofile.R;
+import com.shinsoft.autoprofile.conditions.utils.ProfileCondition;
+import com.shinsoft.autoprofile.parameter.utils.ProfileParameter;
+
+/**
+ * VolumeParameter class
+ * - Field parameters composition :
+ * 		defineMainVolume|mainVolume|defineMediaVolume|mediaVolume|defineAlarmVolume|alarmVolume
+ * 		Ex: 1@10|0@0|1@100
+ * 
+ * <br>
+ * Versions : <br>
+ *
+ *   <li>1.0 : Initialisation</li>
+ * <br>
+ * @version 1.0
+ */
+public class VolumeParameter extends ProfileParameter
+{
+	private static final long serialVersionUID = 6937916492064376163L;
+	private static final String TAG = AutoProfile.class.getSimpleName();
+	public static final int CLASSID = 1;
+	
+	private boolean defineMainVolume;
+	private int mainVolume;
+	private boolean defineMediaVolume;
+	private int mediaVolume;
+	private boolean defineAlarmVolume;
+	private int alarmVolume;
+	
+	
+	/**
+	 * Empty Constructor
+	 * @since 1.0
+	 */
+	public VolumeParameter()
+	{
+	}
+	
+	/**
+	 * Minimal Constructor (New parameter creation)
+	 * @param profileid
+	 * @since 1.0
+	 */
+	public VolumeParameter(int profileid)
+	{
+		this.profileid = profileid;
+	}
+	
+	/**
+	 * Full Constructor (Edition, initialization)
+	 * @param id
+	 * @param profileid
+	 * @param parameters
+	 * @since 1.0
+	 */
+	public VolumeParameter(int id, int profileid, String parameters)
+	{
+		this.id = id;
+		this.profileid = profileid;
+		this.parameters = parameters;
+		this.parseParameters();
+	}
+	
+	
+	/**
+	 * @see com.shinsoft.autoprofile.parameter.utils.ParameterInterface#getClassId()
+	 */
+	public int getClassId()
+	{
+		return CLASSID;
+	}
+
+	/**
+	 * @see com.shinsoft.autoprofile.parameter.utils.ParameterInterface#getNameId()
+	 */
+	public int getNameId()
+	{
+		return R.string.ParameterName_VolumeParameter;
+	}
+
+	public String getParametersSummary(Activity context)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Volume parameters building
+	 * Pattern : defineMainVolume|MainVolume|defineMediaVolume|MediaVolume|defineAlarmVolume|AlarmVolume
+	 * 	Ex : 1@75|0@0|1@100
+	 * 
+	 * @see com.shinsoft.autoprofile.parameter.utils.ParameterInterface#buildParameters()
+	 */
+	public void buildParameters()
+	{
+		StringBuilder parameterSb = new StringBuilder();
+		parameterSb.append(defineMainVolume?"1":"0").append(ProfileParameter.PARAMETERS_SEPARATOR).append(mainVolume).append(ProfileParameter.PARAMETERS_SEPARATOR);
+		parameterSb.append(defineMediaVolume?"1":"0").append(ProfileParameter.PARAMETERS_SEPARATOR).append(mediaVolume).append(ProfileParameter.PARAMETERS_SEPARATOR);
+		parameterSb.append(defineAlarmVolume?"1":"0").append(ProfileParameter.PARAMETERS_SEPARATOR).append(alarmVolume).append(ProfileParameter.PARAMETERS_SEPARATOR);
+		this.parameters = parameterSb.toString();
+	}
+
+	public int getIconResourceId()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
+	 * @see com.shinsoft.autoprofile.parameter.utils.ParameterInterface#parseParameters()
+	 */
+	public void parseParameters()
+	{
+		try
+		{
+			StringTokenizer condTokenized = new StringTokenizer(this.parameters,ProfileCondition.CONDITIONS_SEPARATOR);
+			if (condTokenized.countTokens() == 6)
+			{
+				this.defineMainVolume = "1".equalsIgnoreCase(condTokenized.nextToken());
+				this.mainVolume = Integer.parseInt(condTokenized.nextToken());
+
+				this.defineMediaVolume = "1".equalsIgnoreCase(condTokenized.nextToken());
+				this.mediaVolume = Integer.parseInt(condTokenized.nextToken());
+
+				this.defineAlarmVolume = "1".equalsIgnoreCase(condTokenized.nextToken());
+				this.alarmVolume = Integer.parseInt(condTokenized.nextToken());
+			}
+		}
+		catch (Exception e)
+		{
+			Log.e(TAG,"<!> An error append while parsing parameters <!>",e);
+		}
+	}
+
+	
+	
+	public boolean isDefineMainVolume() {
+		return defineMainVolume;
+	}
+
+	public void setDefineMainVolume(boolean defineMainVolume) {
+		this.defineMainVolume = defineMainVolume;
+	}
+
+	public int getMainVolume() {
+		return mainVolume;
+	}
+
+	public void setMainVolume(int mainVolume) {
+		this.mainVolume = mainVolume;
+	}
+
+	public boolean isDefineMediaVolume() {
+		return defineMediaVolume;
+	}
+
+	public void setDefineMediaVolume(boolean defineMediaVolume) {
+		this.defineMediaVolume = defineMediaVolume;
+	}
+
+	public int getMediaVolume() {
+		return mediaVolume;
+	}
+
+	public void setMediaVolume(int mediaVolume) {
+		this.mediaVolume = mediaVolume;
+	}
+
+	public boolean isDefineAlarmVolume() {
+		return defineAlarmVolume;
+	}
+
+	public void setDefineAlarmVolume(boolean defineAlarmVolume) {
+		this.defineAlarmVolume = defineAlarmVolume;
+	}
+
+	public int getAlarmVolume() {
+		return alarmVolume;
+	}
+
+	public void setAlarmVolume(int alarmVolume) {
+		this.alarmVolume = alarmVolume;
+	}
+}

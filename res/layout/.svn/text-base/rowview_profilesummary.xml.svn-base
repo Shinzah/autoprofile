@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:paddingTop="1dip"
+	android:paddingBottom="1dip"
+	android:paddingLeft="40dip">
+  
+  	<LinearLayout
+  		android:focusable="false"
+  		android:orientation="horizontal"
+  	    android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_weight="1"
+    	android:gravity="top">
+    	
+    	<ImageView
+			android:src="@drawable/listconditions"
+			android:layout_width="15dip"
+			android:layout_height="fill_parent"
+			android:layout_marginRight="10dip"
+		   	android:gravity="top"
+		   	android:adjustViewBounds="true"
+			android:cropToPadding="false"
+			android:focusable="false"/>
+	    <TextView
+	    	android:id="@+id/ListProfileConditions"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:ellipsize="marquee"
+	        android:textAppearance="@style/ProfileSummary"
+	        android:gravity="top"
+	        android:focusable="false"/>
+ 	</LinearLayout>
+  
+    <!-- Separator -->
+    <View
+		android:background="@android:drawable/divider_horizontal_dark"
+		android:layout_height="1px"
+		android:layout_width="fill_parent"
+		android:layout_marginBottom="1px"
+		android:layout_marginTop="1px"/>
+		
+    <LinearLayout
+   		android:id="@+id/ListProfile_LineParameters"
+  		android:focusable="false"
+  		android:orientation="horizontal"
+  	    android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_weight="1"
+    	android:gravity="top">
+    	 
+    	 <ImageView
+			android:src="@drawable/listparameters"
+			android:layout_width="15dip"
+			android:layout_height="fill_parent"
+			android:layout_marginRight="10dip"
+		   	android:gravity="top"
+		   	android:adjustViewBounds="true"
+			android:cropToPadding="false"
+			android:focusable="false"/>
+    	 
+	   <TextView
+	    	android:id="@+id/ListProfileParameters"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:ellipsize="marquee"
+	        android:textAppearance="@style/ProfileSummary"
+	        android:gravity="top"
+	        android:focusable="false"/>
+        
+   </LinearLayout>
+  
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item type="id" name="profileid"/>
+	<item type="id" name="conditionid"/>
+	<item type="id" name="conditionnameid"/>
+	<item type="id" name="iconresname"/>
+	
+	<!-- Notification identifiant -->
+	<item type="id" name="ServiceNotification"/>
+</resources>

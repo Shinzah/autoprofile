@@ -1,0 +1,313 @@
+/** 
+ * Arnaud KEIFLIN (arnaud@keiflin.fr), 11 sept. 2010
+ *
+ * Project : AutoProfile
+ * Package location: com.shinsoft.autoprofile.activity
+ * File name: ManageProfile_ParametersActivity.java
+ *
+ * Comments :
+ **/
+
+
+package com.shinsoft.autoprofile.activity;
+
+import android.app.ListActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.shinsoft.autoprofile.AutoProfile;
+import com.shinsoft.autoprofile.R;
+import com.shinsoft.autoprofile.adapter.ParameterAdapter;
+import com.shinsoft.autoprofile.manager.Constants;
+import com.shinsoft.autoprofile.manager.content.ContentManager;
+import com.shinsoft.autoprofile.manager.exception.ProfileException;
+import com.shinsoft.autoprofile.parameter.utils.ParametersManager;
+import com.shinsoft.autoprofile.parameter.utils.ProfileParameter;
+import com.shinsoft.autoprofile.profile.ProfileInfo;
+
+public class ManageProfile_ParametersActivity extends ListActivity implements OnClickListener, OnItemClickListener, OnLongClickListener
+{
+	private static final String TAG = AutoProfile.class.getSimpleName();
+	
+	// Class property objects
+	private static ParameterAdapter parameterAdapter;
+	private static Intent intent;
+	
+	/**
+	 * When creating activity, configure each widgets depending of profileid
+	 *  - Use a specific layout when profileInfo id = 1 (default one)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 * @since 1.0
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+        super.onCreate(savedInstanceState);
+        ProfileInfo profileInfo =((ManageProfileActivity)getParent()).getProfileInfo();
+    	setContentView(R.layout.manageprofile_parameters);
+    
+        // Context menu configuration
+        registerForContextMenu(getListView());
+        
+        // ============================
+        //		INITIALIZE WIDGETS
+        // ============================
+        parameterAdapter = new ParameterAdapter(this, profileInfo.getListParameters());
+    	this.setListAdapter(parameterAdapter);
+        this.getListView().setOnItemClickListener(this);
+        this.getListView().setOnLongClickListener(this);
+    
+        Button addParameterBtn = (Button)this.findViewById(R.id.ManageProfile_ListParametersAdd);
+        addParameterBtn.setOnClickListener(this);
+        addParameterBtn.setOnCreateContextMenuListener(this);
+	}
+	
+	/**
+	 * Retrieve results of called Activity (Add/Edit conditions)
+	 * @see com.shinsoft.autoprofile.activity.utils.ManageProfileListActivityAbstract#onActivityResult(int, int, android.content.Intent)
+	 * @since 1.0
+	 */
+	@Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data)
+    {
+    	// Do actions depending of activity finished
+    	switch (requestCode)
+    	{
+    		// 'Add condition' and 'Edit condition'
+    		case Constants.REQUEST_CODE_EDITPARAMETER :
+    		case Constants.REQUEST_CODE_ADDPARAMETER :
+    		{
+    			if (resultCode == Constants.RESULT_CODE_OK)
+    			{
+    				try
+    				{
+	    				// Retrieve condition
+	    				ProfileInfo profileInfo = ((ManageProfileActivity)getParent()).getProfileInfo();
+	    				ProfileParameter profileParam = (ProfileParameter)data.getExtras().getSerializable(Constants.EXTRA_KEY_PROFILEPARAMETER);
+	    				// Save into database
+	    				ContentManager.getProfileManager(this).saveParameter(profileParam);
+	    				// Save in profileInfo
+	    				if (profileInfo.getListParameters().contains(profileParam))
+	    					profileInfo.replaceParameter(profileParam);
+	    				else
+	    					profileInfo.addParameter(profileParam);
+	    				profileInfo.setbModified(true);
+	    				// Updating view
+	    				parameterAdapter.notifyDataSetChanged();
+    				}
+    				catch (ProfileException pe)
+    				{
+    					if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getResources().getString(R.string.PreferenceItemKey_DebugMode),false))
+    						Toast.makeText(this, "[Debug] Exception when saving parameter (E:" + pe.getMessage() + ")", Toast.LENGTH_LONG).show();
+    					
+    					Log.e(TAG, "<!> An error append while saving parameter <!>",pe);
+    				}
+    			}
+    			break;
+    		}
+    	}
+    	super.onActivityResult(requestCode,resultCode,data);
+    }
+	
+	
+	/**
+	 * When a click is performed in available condition list, call new activity to configure the new condition
+	 * When a click is performed in conditions list, open edition mode for item selected
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+	 * @since 1.0
+	 */
+	public void onItemClick(AdapterView<?> parent,View v,int position,long id)
+	{
+		switch (parent.getId())
+		{
+			// An item as been selected in parameters list
+			case android.R.id.list :
+			{
+				this.editSelectedParameter(position);
+			}
+		}
+	}
+	
+	/**
+	 * When click performed on Add button, display the addCondition dialog
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 * @since 1.0
+	 */
+	public void onClick(View v) 
+	{
+		// Check if the button Add button as been clicked
+		switch (v.getId())
+		{
+			case R.id.ManageProfile_ListParametersAdd :
+			{
+				if (this.getProfileInfo().getListAvailableParameters().size() > 0)
+					v.showContextMenu();
+				else
+					Toast.makeText(this,R.string.ManageProfile_ListParametersEmpty,Toast.LENGTH_SHORT).show();
+				break;
+			}
+		}
+	}
+	
+	public boolean onLongClick(View v)
+	{
+		v.showContextMenu();
+		return true;
+	}
+	
+    @Override
+	public void onCreateContextMenu(ContextMenu menu,View v,ContextMenuInfo menuInfo)
+	{
+    	switch (v.getId())
+    	{
+    		case R.id.ManageProfile_ListParametersAdd :
+    		{
+    			menu.setHeaderTitle(R.string.ManageProfile_ListParametersAdd);
+    			for (Class<?> currentClass : this.getProfileInfo().getListAvailableParameters())
+    			{
+    				try
+    				{
+    					ProfileParameter currentParam = ((ProfileParameter)currentClass.newInstance());
+    					menu.add(0/*groupId*/,currentParam.getClassId()/*itemId*/,0/*order*/,currentParam.getNameId());
+    					super.onCreateContextMenu(menu,v,menuInfo);
+    				}
+    				catch (Exception e)
+    				{
+    					
+    				}
+    			}
+    			break;
+    		}
+    		case android.R.id.list :
+    		{
+				MenuInflater inflater = getMenuInflater();
+		        inflater.inflate(R.menu.listview_item_contextmenu, menu);
+		        // Dynamic customisation
+		        AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
+		        ProfileParameter profileParameter = this.getProfileInfo().getListParameters().get(info.position);
+		        menu.setHeaderTitle(profileParameter.getNameId());
+		        break;
+    		}
+    	}
+	}
+	/**
+	 * When selecting a context menu item, perform specific action
+	 *  - Edit current parameter
+	 *  - Remove current parameter
+	 *  - Add selected parameter
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 * @since 1.0
+	 */
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo)item.getMenuInfo();
+		switch (item.getItemId())
+    	{
+			// ConditionRow Context Menu - 'Modify'
+	    	case R.id.MenuItem_ListContextMenu_Modify :
+	    	{
+				this.editSelectedParameter(menuInfo.position);
+	    		break;
+	    	}
+	    	// ConditionRow Context Menu -  'Delete'
+	    	case R.id.MenuItem_ListContextMenu_Delete :
+	    	{
+	    		this.removeSelectedParameter(menuInfo.position);
+	    		break;
+	    	}
+	    	// AddParameter Context Menu clicked
+	    	default :
+	    	{
+	    		try
+	    		{
+		    		int classId = item.getItemId();
+					Intent intent = new Intent().setClass(this, GenericParameterActivity.class);
+					// Create a new instance of selected condition class, and set profileId
+					ProfileParameter profileCond = (ProfileParameter)ParametersManager.getClassForClassID(classId).newInstance();
+					profileCond.setProfileid(((ManageProfileActivity)getParent()).getProfileInfo().getId());
+					// Call new Activity
+			        intent.putExtra(Constants.EXTRA_KEY_PROFILEPARAMETER,profileCond);
+			        startActivityForResult(intent,Constants.REQUEST_CODE_ADDPARAMETER);
+	    		}
+	    		catch (Exception e)
+	    		{
+	    			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getResources().getString(R.string.PreferenceItemKey_DebugMode),false))
+	    				Toast.makeText(this, "[Debug] Exception when generating activity to add parameter (E:" + e.getMessage() + ")", Toast.LENGTH_LONG).show();
+	    			
+	    			Log.e(TAG, "<!> An error append while generating activity to add parameter <!>",e);
+	    		}
+		        
+	    		break;
+	    	}
+    	}
+		return super.onContextItemSelected(item);
+	}
+	
+	/**
+	 * Remove selected parameter
+	 * @param position
+	 * @throws ProfileException
+	 * @since 1.0
+	 */
+	private void removeSelectedParameter(int position)
+	{
+		try
+		{
+			// Remove from list and refresh display
+			ProfileInfo profileInfo = ((ManageProfileActivity)getParent()).getProfileInfo();
+			ProfileParameter profileParameter = profileInfo.getListParameters().get(position);
+			// Update database
+			ContentManager.getProfileManager(this).deleteParameter(profileParameter.getId());
+			// Update object
+			profileInfo.removeParameter(profileParameter);
+			profileInfo.setbModified(true);
+			// Update list view
+			parameterAdapter.notifyDataSetChanged();
+		}
+		catch (Exception e)
+		{
+			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getResources().getString(R.string.PreferenceItemKey_DebugMode),false))
+				Toast.makeText(this, "[Debug] Exception when deleting parameter (E:" + e.getMessage() + ")", Toast.LENGTH_LONG).show();
+			
+			Log.e(TAG, "<!> An error append while deleting parameter <!>",e);
+		}
+	}
+	
+	/**
+	 * Call a new activity to edit selected parameter (provide position in list)
+	 * @param position
+	 * @since 1.0
+	 */
+	private void editSelectedParameter(int position)
+	{
+		ProfileParameter profileParam = this.getProfileInfo().getListParameters().get(position);
+		intent = new Intent(this,GenericParameterActivity.class);
+		intent.putExtra(Constants.EXTRA_KEY_PROFILEPARAMETER,profileParam);
+		startActivityForResult(intent,Constants.REQUEST_CODE_EDITPARAMETER);
+	}
+	
+	/**
+	 * Retrieve parent profileInfo
+	 * @return
+	 * @since 1.0
+	 */
+	public ProfileInfo getProfileInfo()
+	{
+		return ((ManageProfileActivity)this.getParent()).getProfileInfo();
+	}
+}

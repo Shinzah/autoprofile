@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="PreferenceScreen_General">Général</string>
+		<string name="PreferenceItem_AutoLaunchService">Activer AutoProfile</string>
+			<string name="PreferenceItemKey_AutoLaunchService">autolaunchservice</string>
+			<string name="PreferenceItemSummary_AutoLaunchService_On">AutoProfile est actif</string>
+			<string name="PreferenceItemSummary_AutoLaunchService_Off">AutoProfile est inactif</string>
+			
+    <string name="PreferenceCategory_Dev">Developpement</string>
+	    <string name="PreferenceItem_DebugMode">Mode débuggage</string>
+	    	<string name="PreferenceItemKey_DebugMode">debugmode</string>
+	    	<string name="PreferenceItemSummary_DebugMode_On">Les traces de débuggage sont affichées</string>
+	    	<string name="PreferenceItemSummary_DebugMode_Off">Les traces de débuggage ne sont pas affichées</string>
+    
+    <string name="PreferenceScreen_Conditions">Conditions</string>
+    	<string name="PreferenceCategory_Time">Horaire</string>
+		    <string name="PreferenceItem_24hMode">Format horaire 24h</string>
+		    	<string name="PreferenceItemKey_24hMode">24hmode</string>
+		    	<string name="PreferenceItemSummary_24hMode_On">L\'heure est affichée au format 24h</string>
+		    	<string name="PreferenceItemSummary_24hMode_Off">L\'heure est affichée au format 12h</string>
+		    <string name="PreferenceItem_SortBy">Tri</string>
+		    	<string name="PreferenceItemKey_SortBy">sortby</string>
+		    	<string name="PreferenceItemSummary_SortBy">Ordre de tri par défaut</string>
+    
+   	<string name="PreferenceScreen_Display">Affichage</string>
+   		<string name="PreferenceCategory_General">Général</string>
+	    <string name="PreferenceCategory_ListProfiles">Liste des profiles</string>
+	    	<string name="PreferenceItem_ListProfiles_DisplayPriority">Barre de priorité</string>
+	    		<string name="PreferenceItemKey_ListProfiles_DisplayPriority">listprofiles_display_priority</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayPriority_On">La barre priorité est affichée</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayPriority_Off">La barre priorité n\'est pas affichée</string>
+	    	<string name="PreferenceItem_ListProfiles_DisplayTime">Condition \'Horaire\'</string>
+	    		<string name="PreferenceItemKey_ListProfiles_DisplayTime">listprofiles_display_time</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayTime_On">Le résumé de la condition \'Horaire\' est affiché</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayTime_Off">Le résumé de la condition \'Horaire\' n\'est pas affiché</string>
+	    	<string name="PreferenceItem_ListProfiles_DisplayDate">Condition \'Date\'</string>
+	    		<string name="PreferenceItemKey_ListProfiles_DisplayDate">listprofiles_display_date</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayDate_On">Le résumé de la condition \'Date\' est affiché</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayDate_Off">Le résumé de la condition \'Date\' n\'est pas affiché</string>
+	    	<string name="PreferenceItem_ListProfiles_DisplayBattery">Condition \'Alimentation\'</string>
+	    		<string name="PreferenceItemKey_ListProfiles_DisplayBattery">listprofiles_display_battery</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayBattery_On">Le résumé de la condition \'Alimentation\' est affiché</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayBattery_Off">Le résumé de la condition \'Alimentation\' n\'est pas affiché</string>  
+
+   
+   			
+
+</resources>

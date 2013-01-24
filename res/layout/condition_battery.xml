@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		<TextView 
+			android:layout_weight="1"
+			android:layout_width="0dip" 
+			android:layout_height="wrap_content"
+			android:gravity="left|center_vertical"
+			android:text="@string/BatteryConditionInChargeLabel"
+			android:textAppearance="@style/ConditionActivityText"/>
+		<CheckBox 
+			android:id="@+id/BatteryCondition_InCharge"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:gravity="right|center_vertical" />
+	</LinearLayout>
+
+	<!-- Separator -->
+	<View
+		android:background="@android:color/darker_gray"
+		android:layout_height="1dip"
+		android:layout_width="fill_parent"
+		android:layout_marginBottom="1px"
+		android:paddingTop="10dip"
+		android:paddingBottom="10dip"/>
+
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+			
+		<TextView 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:id="@+id/BatteryCondition_PercentLabel"
+			android:gravity="left|center_vertical"/>
+		
+	</LinearLayout>
+
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<RadioGroup 
+			android:layout_width="fill_parent"
+        	android:layout_height="wrap_content" 
+        	android:orientation="horizontal"
+            android:id="@+id/BatteryCondition_HigherLower">
+	         
+	        <RadioButton 
+				android:checked="true"
+				android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+                android:text="@string/BatteryConditionPercentLowerLabel" 
+                android:id="@+id/BatteryCondition_Lower" 
+                android:layout_marginRight="30dip"
+                android:gravity="center|center_vertical"/>
+                
+			<RadioButton 
+				android:checked="false"
+				android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+                android:text="@string/BatteryConditionPercentHigherLabel" 
+                android:id="@+id/BatteryCondition_Higher"
+                android:gravity="center|center_vertical"/>
+	                
+		</RadioGroup>
+	</LinearLayout>
+	
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp"
+		android:paddingBottom="15sp">
+		<SeekBar 
+			android:id="@+id/BatteryCondition_Percent"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" 
+			android:max="100"
+			android:progress="50"
+			android:gravity="center_vertical"/>
+	</LinearLayout>
+	
+</LinearLayout>

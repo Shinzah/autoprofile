@@ -1,0 +1,531 @@
+package com.shinsoft.autoprofile;
+
+import java.util.Collections;
+import java.util.List;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
+
+import com.shinsoft.autoprofile.activity.AutoProfilePreferenceActivity;
+import com.shinsoft.autoprofile.activity.ManageProfileActivity;
+import com.shinsoft.autoprofile.adapter.ProfileAdapter;
+import com.shinsoft.autoprofile.manager.Constants;
+import com.shinsoft.autoprofile.manager.NotificationBuilder;
+import com.shinsoft.autoprofile.manager.content.ContentManager;
+import com.shinsoft.autoprofile.manager.receiver.ProfileActivatedReceiver;
+import com.shinsoft.autoprofile.profile.ProfileComparator;
+import com.shinsoft.autoprofile.profile.ProfileInfo;
+import com.shinsoft.autoprofile.service.AutoProfileService;
+import com.shinsoft.autoprofile.thread.EditProfileThreaded;
+import com.shinsoft.autoprofile.view.ActionItem;
+import com.shinsoft.autoprofile.view.QuickAction;
+
+/**
+ * Main activity of AutoProfile
+ * <br>
+ * Versions : <br>
+ *
+ *   <li>1.0 : Initialisation</li>
+ * <br>
+ * @version 1.0
+ */
+public class AutoProfile extends ListActivity implements OnItemClickListener
+{
+	private static final String TAG = AutoProfile.class.getSimpleName();
+	
+	// Preferences objects
+	private boolean debugMode;
+	private boolean autoStartService;
+	
+	// Class properties
+	private Intent intent;
+	private AlertDialog.Builder aboutDia;
+	
+	// Static members
+	public static ProfileAdapter profileAdapter;
+	public static ProfileComparator profileComparator;
+	private static BroadcastReceiver receiver;
+
+	
+    /**
+     * When launching activity, initialize all widgets and retrieve list of all profile
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.autoprofile);
+        
+        // Initialize preferences
+        this.initPrefs();
+        
+        // Initialize the activity
+        this.getListView().setOnItemClickListener(this);
+    }
+    
+    /**
+     * When activity called leaves, perform a refresh of current profile list and view display
+     * Do the same thing when leaving preferences
+     * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+     * @since 1.0
+     */
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data)
+    {
+    	// Do actions depending of activity finished
+    	switch (requestCode)
+    	{
+    		case Constants.REQUEST_CODE_ADDPROFILE :
+    		case Constants.REQUEST_CODE_EDITPROFILE :
+    		{
+    			if (resultCode == Constants.RESULT_CODE_OK)
+    				notifyServiceForUpdate();
+    			break;
+    		}
+    		case Constants.REQUEST_CODE_DISPLAYPREFS :
+    		{
+    			this.initPrefs();
+    			// Refresh the list
+    			this.setOrderByMode(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(getResources().getString(R.string.PreferenceItemKey_SortBy),"1")));
+    			this.refreshListView();
+    			
+    			 // Check for service
+    	        this.checkForServiceAndReceiver();
+    			
+    			break;
+    		}
+    	}
+    	super.onActivityResult(requestCode,resultCode,data);
+    }
+    
+    /** 
+     * On application resume, call initListProfile to create/refresh the listView
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected void onResume()
+    {
+    	if (debugMode)
+    		Log.d(TAG,"Resuming AutoProfile activity");
+    	
+    	this.checkForServiceAndReceiver();
+    	this.initListProfile();
+    	super.onResume();
+    }
+    
+    @Override
+    protected void onPause() 
+    {
+    	if (debugMode)
+    		Log.d(TAG,"Pausing AutoProfile activity");
+    	
+    	this.clear();
+    	super.onPause();
+    }
+    
+    /**
+     * On destroy, free static objects
+     * @see android.app.ListActivity#onDestroy()
+     */
+    @Override
+    protected void onDestroy()
+    {
+    	if (debugMode)
+    		Log.d(TAG,"Destroying AutoProfile activity");
+    	
+    	this.clear();
+    	super.onDestroy();
+    }
+    
+	/**
+	 * When a click is performed on a list item, display edition activity
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+	 * @since 1.0
+	 */
+	public void onItemClick(AdapterView<?> parent,View view,int position,long id)
+	{
+		ProfileInfo selectedProfileInfo = ContentManager.getProfileManager(AutoProfile.this).getAllProfile().get(position);
+		
+		final QuickAction qa = new QuickAction(view,selectedProfileInfo.getName(),selectedProfileInfo.getIconResourceId());
+		final ActionItem modifyItem;
+		final ActionItem deleteItem;
+		final ActionItem activateItem;
+		
+		// Create 'modify' button
+		modifyItem = new ActionItem(getResources().getDrawable(R.drawable.edit),position);
+		modifyItem.setTitle(getResources().getString(R.string.ListContextMenuModify));
+		modifyItem.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) { 
+				EditProfileThreaded.launch(AutoProfile.this,modifyItem.getPosition());
+			}
+		});
+		
+		// Create 'delete' button
+		deleteItem = new ActionItem(getResources().getDrawable(R.drawable.delete),position);
+		deleteItem.setTitle(getResources().getString(R.string.ListContextMenuDelete));
+		deleteItem.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) { 
+				try
+				{
+					// Updating database
+	    			ProfileInfo profileInfo = ContentManager.getProfileManager(AutoProfile.this).getAllProfile().get(deleteItem.getPosition());
+	    			ContentManager.getProfileManager(AutoProfile.this).deleteProfile(profileInfo.getId());
+	    			// Updating view
+	    			ContentManager.getProfileManager(AutoProfile.this).getAllProfile().remove(profileInfo);
+	    			setOrderByMode(-1);
+	    			refreshListView();
+	    			// Notify service for modifications
+					notifyServiceForUpdate();
+	    			// Inform user of item deleted
+	    			NotificationBuilder.notifyProfileDeleted(AutoProfile.this,profileInfo.getName());
+				}
+    			catch (Exception pe)
+	    		{
+	    			if (debugMode)
+	    				Toast.makeText(AutoProfile.this, "[Debug] Exception when removing profile (E:" + pe.getMessage() + ")", Toast.LENGTH_LONG).show();
+	    			Log.e(TAG, "<!> An error append while removing a profile <!>",pe);
+	    		}
+			}
+		});
+		
+		// Create 'activate/desactivate' button
+		activateItem = new ActionItem(selectedProfileInfo.isActivate()?getResources().getDrawable(R.drawable.desactivate):getResources().getDrawable(R.drawable.activate),position);
+		activateItem.setTitle(selectedProfileInfo.isActivate()?getResources().getString(R.string.desactivate):getResources().getString(R.string.activate));// Dynamic title depending of profilestatus
+		activateItem.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) 
+			{
+				try
+				{
+					// Retrieve profileInfo
+					ProfileInfo profileInfo = ContentManager.getProfileManager(AutoProfile.this).getAllProfile().get(activateItem.getPosition());
+					profileInfo.setActivate(!profileInfo.isActivate());
+					// Updating database
+					ContentManager.getProfileManager(AutoProfile.this).updateProfileActivation(profileInfo.getId(),profileInfo.isActivate());
+					// Warn service for update made on a profile
+					setOrderByMode(-1);
+					refreshListView();
+					// Notify service for modifications
+					notifyServiceForUpdate();
+				}
+				catch (Exception e)
+				{
+					if (debugMode)
+	    				Toast.makeText(AutoProfile.this, "[Debug] Exception when updating profile status (E:" + e.getMessage() + ")", Toast.LENGTH_LONG).show();
+	    			Log.e(TAG, "<!> An error append while removing a profile <!>",e);
+				}
+			}
+		});
+		
+		// Add item to QuickAction and display it
+		qa.addActionItem(modifyItem);
+		if (selectedProfileInfo.getId() != Constants.DEFAULT_PROFILE_ID)// Do not display delete & activate/disactivate item for default profile
+		{
+			qa.addActionItem(deleteItem);
+			qa.addActionItem(activateItem);
+		}
+		qa.animateTrack(false);
+		qa.show();
+	}
+	
+    /**
+     * Build the option menu
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     * @since 1.0
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
+    	getMenuInflater().inflate(R.menu.main_menu, menu);
+    	return true;
+    }
+    
+    /**
+     * Do Specific action on option menu item selection
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     * @since 1.0
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) 
+    {
+    	switch (item.getItemId())
+    	{
+    		// 'Add'
+	    	case R.id.MenuItem_MainMenuAddProfile :
+	    	{
+	    		this.intent = new Intent(this, ManageProfileActivity.class);
+				startActivityForResult(this.intent,Constants.REQUEST_CODE_ADDPROFILE);
+	    		break;
+	    	}
+	    	// 'Options'
+	    	case R.id.MenuItem_MainMenuPreference :
+	    	{
+	    		this.intent = new Intent(this, AutoProfilePreferenceActivity.class);
+				startActivityForResult(this.intent,Constants.REQUEST_CODE_DISPLAYPREFS);
+	    		break;
+	    	}
+	    	// 'Sort' >> 'Priority Asc'
+	    	case R.id.MenuItem_SubMenuSortByPriorityAsc :
+	    	{
+	    		this.setOrderByMode(ProfileComparator.SORT_BY_PRIORITY_ASC);
+	    		break;
+	    	}
+	    	// 'Sort' >> 'Priority Desc'
+	    	case R.id.MenuItem_SubMenuSortByPriorityDesc :
+	    	{
+	    		this.setOrderByMode(ProfileComparator.SORT_BY_PRIORITY_DESC);
+	    		break;
+	    	}
+	    	// 'Sort' >> 'Name Asc'
+	    	case R.id.MenuItem_SubMenuSortByNameAsc :
+	    	{
+	    		this.setOrderByMode(ProfileComparator.SORT_BY_NAME_ASC);
+	    		break;
+	    	}
+	    	// 'Sort' >> 'Name Desc'
+	    	case R.id.MenuItem_SubMenuSortByNameDesc :
+	    	{
+	    		this.setOrderByMode(ProfileComparator.SORT_BY_NAME_DESC);
+	    		break;
+	    	}
+	    	// 'Help'
+	    	case R.id.MenuItem_MainMenuHelp :
+	    	{
+	    		break;
+	    	}
+	    	// 'About'
+	    	case R.id.MenuItem_MainMenuAbout :
+	    	{
+	    		this.showAbout();
+	    		break;
+	    	}
+    	}
+    	return super.onOptionsItemSelected(item);
+    }
+    
+    /**
+     * Update the profileComparator and the preference
+     * @param mode
+     * @since 1.0
+     */
+    public void setOrderByMode(int mode)
+    {
+    	if (profileComparator == null || profileAdapter == null)
+    		this.initListProfile();
+    		
+    	if (mode >= 0)
+    		profileComparator.setMode(mode);
+		Collections.sort(ContentManager.getProfileManager(AutoProfile.this).getAllProfile(),profileComparator);
+		profileAdapter.notifyDataSetChanged();
+    }
+    
+    /**
+     * Manage the whole profile list.
+     *  - If the list is null, search for it into database, else, just do a sort
+     *  - If the profileAdapter is null, create it and set it into listView, else just notify of data change
+     *  - If the currentProfile is setted, then display a save message
+     * @since 1.0
+     */
+    private void initListProfile()
+    {
+    	try
+    	{
+    		if (profileComparator == null)
+    			profileComparator = new ProfileComparator(PreferenceManager.getDefaultSharedPreferences(this).getString(getResources().getString(R.string.PreferenceItemKey_SortBy),"1"));
+    		Collections.sort(ContentManager.getProfileManager(AutoProfile.this).getAllProfile(),profileComparator);
+    		
+    		// If the adapter is empty, then create a new one and add it to the listactivity
+    		if (profileAdapter == null)
+    		{
+    			profileAdapter = new ProfileAdapter(this);
+    			setListAdapter(profileAdapter);	
+    		}
+    		// Update the listview display
+    		else
+    		{
+    			this.notifyServiceForUpdate();
+    			this.refreshListView();
+    		}
+	    }
+	    catch (Exception e)
+	    {
+	    	if (debugMode)
+	    		Toast.makeText(this, "[Debug] Exception when building profile list (E:" + e.getMessage()+")", Toast.LENGTH_LONG).show();
+	    	Log.e(TAG, "<!> An error append while building profile list <!>",e);
+	    }
+    }
+    
+    private void initPrefs()
+    {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        this.debugMode = prefs.getBoolean(getResources().getString(R.string.PreferenceItemKey_DebugMode),false);
+    	this.autoStartService = prefs.getBoolean(getResources().getString(R.string.PreferenceItemKey_AutoLaunchService),true);
+    }
+    
+    public void refreshListView()
+    {
+    	// Force refresh to avoid resume bug
+    	profileAdapter.notifyDataSetChanged();
+		setListAdapter(profileAdapter);
+    }
+    
+    /**
+     * Notify the serviceconnection of modification in profiles
+     */
+    private void notifyServiceForUpdate()
+    {
+    	if (this.autoStartService)
+    	{
+	    	// Send broadcast message to profile
+	    	intent = new Intent(Constants.ACTION_PROFILE_UPDATED);
+	    	sendBroadcast(intent);
+    	}
+    }
+    
+    /**
+     * Display about dialog
+     * @since 1.0
+     */
+    private void showAbout()
+    {
+    	aboutDia = new AlertDialog.Builder(this);
+    	aboutDia.setIcon(android.R.drawable.ic_menu_info_details);
+    	aboutDia.setTitle(getString(R.string.app_name) + " v" + getString(R.string.version));
+    	aboutDia.setMessage("Ma premiére application Android !!");
+    	
+    	aboutDia.show();
+    }
+    
+    /**
+     * On activity start, check if autoprofile service is running
+     * @since 1.0
+     */
+    private void checkForServiceAndReceiver()
+    {
+		ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+		List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+		Intent serviceIntent = new Intent(AutoProfile.this,AutoProfileService.class);
+		
+		// Search if AutoProfileService is running
+		boolean isServiceFound = false;
+		for (int i = 0; i < services.size(); i++)
+		{
+	    	 if (AutoProfileService.class.getName().equals(services.get(i).service.getClassName()))
+	    	 {
+	    		 isServiceFound = true;
+	    		 break;
+	    	 }
+		}
+		
+		// ### SERVICE ###
+		// If not running, then launch it
+		if (!isServiceFound && this.autoStartService)
+		{
+			if (debugMode)
+				Log.d(TAG,"Service not found, starting service ...");
+			startService(serviceIntent);
+			isServiceFound = true;
+		}
+		// If running but preference are in "do not run", stop it
+		else if (isServiceFound && !this.autoStartService)
+		{
+			if (debugMode)
+				Log.d(TAG,"Service found, shutdown requested");
+			
+			stopService(serviceIntent);
+			isServiceFound = false;
+		}
+		
+		// ### RECEIVER ###
+		// If service is found/started, then register the receiver
+		if (isServiceFound)
+		{
+			if (receiver == null)
+			{
+				if (debugMode)
+					Log.d(TAG,"Service is running, starting receiver");
+				
+				receiver = new ProfileActivatedReceiver(this,debugMode);
+				
+				IntentFilter intentFilter = new IntentFilter(Constants.ACTION_PROFILEACTIVATED_UPDATED);
+				registerReceiver(receiver, intentFilter);
+			}
+			else
+			{
+				if (debugMode)
+					Log.d(TAG,"Service & receiver are running");
+			}
+		}
+		// Else, if the receiver is registered, then unregister it
+		else if (receiver != null)
+		{
+			if (debugMode)
+				Log.d(TAG,"Service not running, stopping receiver");
+			try
+			{
+				unregisterReceiver(receiver);
+			}
+			catch (IllegalArgumentException e)
+			{
+				if (debugMode)
+					Log.e(TAG,"Trying to unregister an unregistered receiver .... !!");
+			}
+			receiver = null;
+		}
+    }
+    
+    
+    /**
+     * Clear the activity of all useless objects to help gc
+     */
+    private void clear()
+    {
+    	if (debugMode)
+    		Log.d(TAG,"Class cleaning requested...");
+    	
+    	// Clearing useless static objects
+    	profileAdapter = null;
+    	profileComparator = null;
+    	
+    	// Clearing useless class objects
+    	this.intent = null;
+    	this.aboutDia = null;
+    	
+    	// If receiver registered, unregister it
+    	if (receiver != null)
+    	{
+	    	if (debugMode)
+				Log.d(TAG,"Unregistering receiver");
+			try
+			{
+				unregisterReceiver(receiver);
+			}
+			catch (IllegalArgumentException e)
+			{
+				if (debugMode)
+					Log.e(TAG,"Trying to unregister an unregistered receiver .... !!");
+			}
+			receiver = null;
+    	}
+    	
+    	// Call GC
+    	System.gc();
+    	
+    }
+}

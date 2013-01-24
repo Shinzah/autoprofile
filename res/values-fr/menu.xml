@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- AutoProfile Menu -->
+    <string name="AutoProfileOptionMenuAdd">Ajouter</string>
+    <string name="AutoProfileOptionMenuSort">Trier</string>
+    	<string name="AutoProfileOptionSubMenuSortByPriorityAsc">Par priorité (0>50)</string>
+		<string name="AutoProfileOptionSubMenuSortByPriorityDesc">Par priorité (50>0)</string>
+		<string name="AutoProfileOptionSubMenuSortByNameAsc">Par nom (A>Z)</string>
+		<string name="AutoProfileOptionSubMenuSortByNameDesc">Par nom (Z>A)</string>
+    <string name="AutoProfileOptionMenuPref">Options</string>
+    <string name="AutoProfileOptionMenuHelp">Aide</string>
+    <string name="AutoProfileOptionMenuAbout">A propos</string>
+    <!-- AddProfile Menu -->
+    <string name="ManageProfileOptionMenuBack">Retour</string>
+    <string name="ManageProfileOptionMenuSave">Sauvegarder</string>
+    <!-- List Context Menu -->
+    <string name="ListContextMenuModify">Modifier</string>
+    <string name="ListContextMenuDelete">Supprimer</string>
+</resources>

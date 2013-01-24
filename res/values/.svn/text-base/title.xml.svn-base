@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Title_ManageProfileActivity_AddProfile">AutoProfile > Add profile</string>
+    <string name="Title_ManageProfileActivity_EditProfile">AutoProfile > Edit profile</string>
+    <string name="Title_Condition">Condition</string>
+	    <string name="Title_TimeCondition">Time</string>
+	    <string name="Title_DateCondition">Date</string>
+	    <string name="Title_BatteryCondition">Power</string>
+	<string name="Title_Parameter">Parameter</string>
+		<string name="Title_VolumeParameter">Volume</string>
+	    
+    <string name="Title_Preference">Options</string>
+</resources>

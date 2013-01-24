@@ -1,0 +1,228 @@
+/** 
+ * Arnaud KEIFLIN (arnaud@keiflin.fr), 11 sept. 2010
+ *
+ * Project : AutoProfile
+ * Package location: com.shinsoft.autoprofile.activity
+ * File name: ManageProfile_GeneralActivity.java
+ *
+ * Comments :
+ **/
+
+
+package com.shinsoft.autoprofile.activity;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+
+import com.shinsoft.autoprofile.AutoProfile;
+import com.shinsoft.autoprofile.R;
+import com.shinsoft.autoprofile.adapter.IconAdapter;
+import com.shinsoft.autoprofile.manager.Constants;
+import com.shinsoft.autoprofile.profile.ProfileInfo;
+
+public class ManageProfile_GeneralActivity extends Activity implements OnSeekBarChangeListener, OnClickListener, OnItemClickListener
+{
+	private static final String TAG = AutoProfile.class.getSimpleName();
+
+	// Activity widgets
+	private static TextView priorityLabel;
+	private static ImageView iconBtn;
+	private static AlertDialog iconDialog;
+	
+	/**
+	 * When creating activity, configure activity's widget
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 * @since 1.0
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.manageprofile_general);
+        
+        // Retrieve and Fill 'general' tab widgets
+        SeekBar prioritySeekBar = (SeekBar)this.findViewById(R.id.ManageProfilePriorityField);
+        prioritySeekBar.setOnSeekBarChangeListener(this);
+        iconBtn = (ImageView)this.findViewById(R.id.ManageProfileIconBtn);
+        iconBtn.setOnClickListener(this);
+        priorityLabel = ((TextView)this.findViewById(R.id.ManageProfilePriorityLabel));
+        EditText profileName = (EditText)this.findViewById(R.id.ManageProfileNameField);
+        profileName.addTextChangedListener(new TextWatcher()
+		{
+			public void onTextChanged(CharSequence s,int start,int before,int count) {}
+			public void beforeTextChanged(CharSequence s,int start,int count,int after) {}
+			public void afterTextChanged(Editable s)
+			{
+				if (!s.toString().equals(getProfileInfo().getName()))
+				{
+					getProfileInfo().setName(s.toString());
+					getProfileInfo().setbModified(true);
+				}
+			}
+		});
+        
+        //		INITIALIZE WIDGETS
+        
+        // Building alertDialog for icons
+		View icongridView = LayoutInflater.from(this).inflate(R.layout.profileicon_gridview,null);
+		GridView grid = (GridView)icongridView.findViewById(R.id.grid);
+		grid.setAdapter(new IconAdapter(this));
+		grid.setOnItemClickListener(this);
+		AlertDialog.Builder iconDialogB = new AlertDialog.Builder(this);
+		iconDialogB.setTitle(R.string.IconSelectDialogTitle);
+		iconDialogB.setView(icongridView);
+		iconDialog = iconDialogB.create();
+        
+        
+        if (this.getProfileInfo().getId() == 0)
+        {
+        	this.setTitle(R.string.Title_ManageProfileActivity_AddProfile);
+        	iconBtn.setImageResource(R.drawable.profileicon1);
+        	iconBtn.setTag(R.id.iconresname,"profileicon1");
+        }
+        else
+        {
+        	// Filling widgets with profileInfo retrieved
+        	this.setTitle(R.string.Title_ManageProfileActivity_EditProfile);
+        	profileName.setText(this.getProfileInfo().getName());
+        	iconBtn.setImageResource(this.getProfileInfo().getIconResourceId());
+        	iconBtn.setTag(R.id.iconresname,String.valueOf(this.getProfileInfo().getIcon()));
+        	prioritySeekBar.setProgress(this.getProfileInfo().getPrio());
+        	// In edit mode, for 'by default' profile we can't modify the name and priority
+        	if (this.getProfileInfo().getId() == 1)
+        	{
+        		profileName.setEnabled(false);
+        		profileName.setFocusable(false);
+        		this.findViewById(R.id.ManageProfilePriorityLabel).setVisibility(View.INVISIBLE);
+        		prioritySeekBar.setVisibility(View.INVISIBLE);
+        	}
+        }
+        
+        this.updatePriorityLabel(this.getProfileInfo().getPrio());
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		priorityLabel = null;
+		iconBtn = null;
+		iconDialog = null;
+		super.onDestroy();
+	}
+	
+	/**
+	 * On profile icon click, display the dialog to select another icon
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 * @since 1.0
+	 */
+	public void onClick(View v) 
+	{
+		// Check if the button Add button as been clicked
+		switch (v.getId())
+		{
+			case R.id.ManageProfileIconBtn :
+			{
+				this.displayIconSelectionDialog();
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * When click performed on an icon, update the icon tag, resource, and update the profileInfo
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+	 * @since 1.0
+	 */
+	public void onItemClick(AdapterView<?> parent,View view,int position,long id)
+	{
+		switch (parent.getId())
+		{
+			// An item as been selected into gridview
+			case R.id.grid :
+			{
+				// Updating button display
+				int iconResIdSelected = Constants.PROFILEICON_RESOURCES_LIST[ position ];
+				String iconNameSelected = Constants.PROFILEICON_NAME_LIST[ position ];
+				iconBtn.setTag(R.id.iconresname,iconNameSelected);
+				iconBtn.setImageResource(iconResIdSelected);
+				
+				// Updating profileInfo
+				this.getProfileInfo().setIcon(iconNameSelected);
+				this.getProfileInfo().setbModified(true);
+				
+				// Close the dialog
+				iconDialog.dismiss();
+				break;
+			}
+		}
+	}
+    
+	/**
+	 * Update priority label when changing progressbar
+	 * @see android.widget.SeekBar.OnSeekBarChangeListener#onProgressChanged(android.widget.SeekBar, int, boolean)
+	 * @since 1.0
+	 */
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) 
+	{
+		// Update value selected into label
+		this.updatePriorityLabel(progress);
+	}
+	public void onStartTrackingTouch(SeekBar seekBar) {}
+	
+	/**
+	 * When progress is stopped, update the profileInfo with parameters
+	 * @see android.widget.SeekBar.OnSeekBarChangeListener#onStopTrackingTouch(android.widget.SeekBar)
+	 * @since 1.0
+	 */
+	public void onStopTrackingTouch(SeekBar seekBar) 
+	{
+    	this.getProfileInfo().setPrio(seekBar.getProgress());
+    	this.getProfileInfo().setbModified(true);
+	}
+	
+    /**
+     * Update the priority label with given parameter
+     * @param progress
+     * @return
+     */
+    private void updatePriorityLabel(int progress)
+    {
+		StringBuilder labelWValue = new StringBuilder(getString(R.string.ManageProfilePriorityLabel));
+		labelWValue.append(" (").append(progress).append(")");
+		priorityLabel.setText(labelWValue.toString());
+    }
+    
+	/**
+	 * Display a customDialog filled with all available profile icon
+	 * @since 1.0
+	 */
+	private void displayIconSelectionDialog()
+	{
+		iconDialog.show();
+	}
+	
+	/**
+	 * Retrieve the profileInfo from parent
+	 * @return
+	 * @since 1.0
+	 */
+	public ProfileInfo getProfileInfo()
+	{
+		return ((ManageProfileActivity)this.getParent()).getProfileInfo();
+	}
+	
+}

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	
+	<!-- MainVolume Checkbox -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<TextView 
+			android:id="@+id/VolumeParameter_MainVolume_Label"
+			android:layout_weight="1"
+			android:layout_width="0dip" 
+			android:layout_height="wrap_content"
+			android:gravity="left|center_vertical"
+			android:text="@string/VolumeParameterMainVolumeLabel"
+			android:textAppearance="@style/ConditionActivityText"/>
+		<CheckBox 
+			android:id="@+id/VolumeParameter_MainVolume"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:gravity="right|center_vertical" />
+		
+	</LinearLayout>
+	<!-- MainVolume SeekBar TODO : Remove LinearLayout?? -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<SeekBar 
+			android:id="@+id/VolumeParameter_MainLevel"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" 
+			android:max="100"
+			android:progress="50"
+			android:gravity="center_vertical"/>
+		
+	</LinearLayout>
+
+
+	<!-- MediaVolume Checkbox -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<TextView
+			android:id="@+id/VolumeParameter_MediaVolume_Label" 
+			android:layout_weight="1"
+			android:layout_width="0dip" 
+			android:layout_height="wrap_content"
+			android:gravity="left|center_vertical"
+			android:text="@string/VolumeParameterMediaVolumeLabel"
+			android:textAppearance="@style/ConditionActivityText"/>
+		<CheckBox 
+			android:id="@+id/VolumeParameter_MediaVolume"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:gravity="right|center_vertical" />
+		
+	</LinearLayout>
+	<!-- MediaVolume SeekBar TODO : Remove LinearLayout?? -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<SeekBar 
+			android:id="@+id/VolumeParameter_MediaLevel"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" 
+			android:max="100"
+			android:progress="50"
+			android:gravity="center_vertical"/>
+		
+	</LinearLayout>
+
+
+	<!-- AlarmVolume Checkbox -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<TextView 
+			android:id="@+id/VolumeParameter_AlarmVolume_Label"
+			android:layout_weight="1"
+			android:layout_width="0dip" 
+			android:layout_height="wrap_content"
+			android:gravity="left|center_vertical"
+			android:text="@string/VolumeParameterAlarmVolumeLabel"
+			android:textAppearance="@style/ConditionActivityText"/>
+		<CheckBox 
+			android:id="@+id/VolumeParameter_AlarmVolume"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:gravity="right|center_vertical" />
+		
+	</LinearLayout>
+	<!-- AlarmVolume SeekBar TODO : Remove LinearLayout?? -->
+	<LinearLayout 
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:paddingRight="5sp"
+		android:paddingLeft="5sp">
+		
+		<SeekBar 
+			android:id="@+id/VolumeParameter_AlarmLevel"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content" 
+			android:max="100"
+			android:progress="50"
+			android:gravity="center_vertical"/>
+		
+	</LinearLayout>
+	
+</LinearLayout>

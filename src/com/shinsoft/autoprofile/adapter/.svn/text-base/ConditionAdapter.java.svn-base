@@ -1,0 +1,118 @@
+/** 
+ * Arnaud KEIFLIN (arnaud@keiflin.fr), 11 sept. 2010
+ *
+ * Project : AutoProfile
+ * Package location: com.shinsoft.autoprofile.adapter
+ * File name: ConditionAdapter.java
+ *
+ * Comments :
+ **/
+
+
+package com.shinsoft.autoprofile.adapter;
+
+import java.util.List;
+
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.shinsoft.autoprofile.AutoProfile;
+import com.shinsoft.autoprofile.R;
+import com.shinsoft.autoprofile.conditions.utils.ProfileCondition;
+
+@SuppressWarnings("rawtypes")
+public class ConditionAdapter extends ArrayAdapter
+{
+	private static final String TAG = AutoProfile.class.getSimpleName();
+	
+	// Class property
+	private List<ProfileCondition> listConditions;
+	private LayoutInflater inflater;
+	
+	/**
+	 * Default Constructor
+	 * @param context
+	 * @param listConditions
+	 * @since 1.0
+	 */
+	public ConditionAdapter(Activity context, List<ProfileCondition> listConditions)
+	{
+		super(context,R.layout.condition_rowview);
+		this.inflater = LayoutInflater.from(context);
+		this.listConditions = listConditions;
+	}
+
+	/**
+	 * Build a custom view for each conditions
+	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+	 * @since 1.0
+	 */
+	@Override
+	public View getView(int position,View conditionRow,ViewGroup parent)
+	{
+		ViewHolder holder;
+		ProfileCondition profileCond = this.listConditions.get(position);
+		
+		// If convertView is null then inflate profileView layout
+		if (conditionRow == null)
+		{
+			holder = new ViewHolder();
+			conditionRow = inflater.inflate(R.layout.condition_rowview,null);
+			
+			// Retrieve all layout widgets
+			holder.conditionIcon = (ImageView)conditionRow.findViewById(R.id.ListConditionIcon);
+			holder.conditionName = (TextView)conditionRow.findViewById(R.id.ListConditionName);
+			holder.conditionConditions = (TextView)conditionRow.findViewById(R.id.ListConditionConditions);
+			
+			conditionRow.setTag(holder);
+		}
+		else
+			holder = (ViewHolder)conditionRow.getTag();
+		
+		// Configure widgets
+		holder.conditionName.setText(profileCond.getNameId());
+		holder.conditionConditions.setText(profileCond.getConditionsSummary((Activity)getContext()));
+		holder.conditionIcon.setImageResource(profileCond.getIconResourceId());
+		
+		return (conditionRow);
+	}
+	
+	
+	@Override
+	public int getCount()
+	{
+		return this.listConditions.size();
+	}
+	@Override
+	public Object getItem(int position)
+	{
+		return this.listConditions.get(position);
+	}
+	@Override
+	public long getItemId(int position)
+	{
+		return position;
+	}
+	
+	
+	/**
+	 * Internal class to hold all list row widgets
+	 * <br>
+	 * Versions : <br>
+	 *
+	 *   <li>1.0 : Initialisation</li>
+	 * <br>
+	 * @version 1.0
+	 */
+	public class ViewHolder
+	{
+		private ImageView conditionIcon;
+		private TextView conditionName;
+		private TextView conditionConditions;
+	}
+}

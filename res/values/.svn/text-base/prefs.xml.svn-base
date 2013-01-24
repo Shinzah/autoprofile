@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="PreferenceScreen_General">General</string>
+		<string name="PreferenceItem_AutoLaunchService">Activate AutoProfile</string>
+			<string name="PreferenceItemKey_AutoLaunchService">autolaunchservice</string>
+			<string name="PreferenceItemSummary_AutoLaunchService_On">AutoProfile is activated</string>
+			<string name="PreferenceItemSummary_AutoLaunchService_Off">AutoProfile is desactivated</string>
+
+    <string name="PreferenceCategory_Dev">Developpement</string>
+    	<string name="PreferenceItem_DebugMode">Debug mode</string>
+    		<string name="PreferenceItemKey_DebugMode">debugmode</string>
+    		<string name="PreferenceItemSummary_DebugMode_On">Debug trace are display</string>
+	    	<string name="PreferenceItemSummary_DebugMode_Off">Debug trace are not display</string>
+    
+    <string name="PreferenceScreen_Conditions">Conditions</string>
+    	<string name="PreferenceCategory_Time">Time</string>
+    		<string name="PreferenceItem_24hMode">24h time format</string>
+    			<string name="PreferenceItemKey_24hMode">24hmode</string>
+    			<string name="PreferenceItemSummary_24hMode_On">Time is display in 24h format</string>
+		    	<string name="PreferenceItemSummary_24hMode_Off">Time is display in 12h format</string>
+		    <string name="PreferenceItem_SortBy">Order</string>
+		    	<string name="PreferenceItemKey_SortBy">sortby</string>
+		    	<string name="PreferenceItemSummary_SortBy">Default sort order</string>
+    
+    <string name="PreferenceScreen_Display">Display</string>
+    	<string name="PreferenceCategory_General">General</string>
+    	<string name="PreferenceCategory_ListProfiles">Profile list</string>
+    		<string name="PreferenceItem_ListProfiles_DisplayPriority">Display priority bar</string>
+    			<string name="PreferenceItemKey_ListProfiles_DisplayPriority">listprofiles_display_priority</string>
+    			<string name="PreferenceItemSummary_ListProfiles_DisplayPriority_On">Priority bar is display in profile list</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayPriority_Off">Priority bar is not display in profile list</string>
+    		<string name="PreferenceItem_ListProfiles_DisplayTime">\'Time\' condition</string>
+    			<string name="PreferenceItemKey_ListProfiles_DisplayTime">listprofiles_display_time</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayTime_On">\'Time\' condition summary is display</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayTime_Off">\'Time\' condition summary is not display</string>
+	    	<string name="PreferenceItem_ListProfiles_DisplayDate">\'Date\' condition</string>
+	    		<string name="PreferenceItemKey_ListProfiles_DisplayDate">listprofiles_display_date</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayDate_On">\'Date\' condition summary is display</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayDate_Off">\'Date\' condition summary is not display</string>
+ 	    	<string name="PreferenceItem_ListProfiles_DisplayBattery">\'Power\' condition</string>
+ 	    		<string name="PreferenceItemKey_ListProfiles_DisplayBattery">listprofiles_display_battery</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayBattery_On">\'Power\' condition summary is display</string>
+	    		<string name="PreferenceItemSummary_ListProfiles_DisplayBattery_Off">\'Power\' condition summary is not display</string>   	
+    	
+    		
+    
+</resources>

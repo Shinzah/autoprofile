@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/MenuItem_ManageProfileSaveItem"
+    	android:icon="@android:drawable/ic_menu_save"
+    	android:title="@string/ManageProfileOptionMenuSave" />
+
+    <item android:id="@+id/MenuItem_ManageProfileBackItem"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="@string/ManageProfileOptionMenuBack" />
+        
+     <item android:id="@+id/MenuItem_ManageProfileHelpItem"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="@string/AutoProfileOptionMenuHelp" />
+</menu>

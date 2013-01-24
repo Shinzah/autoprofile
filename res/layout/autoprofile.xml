@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dip">
+    
+    <TextView
+		android:id="@+id/ProfileTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left"
+		android:textAppearance="@style/Label"
+		android:text="@string/ListProfiles"
+		android:paddingBottom="5dip"/>
+		
+	<ExpandableListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:focusableInTouchMode="true"
+		android:focusable="true"
+		android:clickable="true"
+		android:longClickable="true"
+		android:drawSelectorOnTop="false"
+		android:hapticFeedbackEnabled="true"
+		/>
+		
+</LinearLayout>

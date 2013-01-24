@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:padding="5dip">
+	
+	<Button
+		android:id="@+id/ManageProfile_ListConditionsAdd"
+		android:text="@string/ManageProfile_ListConditionsAdd"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:padding="10px"
+		android:textAppearance="@style/Button"/>
+	
+	<TextView 
+		android:id="@+id/ManageProfile_ListConditionsLabel"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_gravity="left"
+		android:textAppearance="@style/Label"
+		android:text="@string/ManageProfile_ListConditionsLabel"
+		android:paddingBottom="5dip"/>
+	
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:focusableInTouchMode="true"
+		android:focusable="true"
+		android:clickable="true"
+		android:longClickable="true"
+		android:drawSelectorOnTop="false"
+		android:choiceMode="singleChoice"
+		android:hapticFeedbackEnabled="true"/>
+
+</LinearLayout>

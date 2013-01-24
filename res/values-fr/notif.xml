@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="Notif_Started">AutoProfile démarré...</string>
+	<string name="Notif_IsWatchingForConditions">Surveille vos conditions</string>
+</resources>

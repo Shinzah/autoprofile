@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:id="@+id/ListParameterRow"
+    android:focusable="false"
+    android:paddingTop="5dip"
+	android:paddingBottom="5dip">
+    
+    <!-- Condition Icon -->
+    <ImageView
+		android:id="@+id/ListParameterIcon"
+		android:layout_marginLeft="5dip" 
+		android:layout_marginRight="5dip" 
+		android:layout_width="35dip"
+		android:layout_height="35dip"
+	   	android:layout_gravity="top|center_vertical"
+	   	android:adjustViewBounds="true"
+		android:cropToPadding="false"
+		android:focusable="false"/>
+    
+    <!-- Condition Informations -->
+    <LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="0dip"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:gravity="left|center_vertical"
+	    android:focusable="false">
+ 
+	    <TextView
+	    	android:id="@+id/ListParameterName"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:textAppearance="@style/ProfileName"
+	        android:gravity="bottom"
+	        android:focusable="false"/>
+ 
+	    <TextView
+	    	android:id="@+id/ListParameterParameters"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+            android:ellipsize="marquee"
+	        android:textAppearance="@style/ProfileSummary"
+	        android:gravity="top"
+	        android:focusable="false"/>
+	        
+    </LinearLayout>
+    
+</LinearLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.shinsoft.autoprofile"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    	<!-- Main Activity -->
+        <activity android:name=".AutoProfile" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- ManageProfileActivity and Sub Activity (Tabs) -->
+        <activity android:name="com.shinsoft.autoprofile.activity.ManageProfileActivity"
+        	android:label="@string/Title_ManageProfileActivity_AddProfile"/>
+        <activity android:name="com.shinsoft.autoprofile.activity.ManageProfile_GeneralActivity"/>
+        <activity android:name="com.shinsoft.autoprofile.activity.ManageProfile_ConditionsActivity"/>
+		<activity android:name="com.shinsoft.autoprofile.activity.ManageProfile_ParametersActivity"/>
+		
+		<!-- Conditions -->
+		<activity android:name="com.shinsoft.autoprofile.activity.conditions.TimeConditionActivity"
+			android:theme="@style/ConditionDialog"
+			android:label="@string/Title_TimeCondition_Title"/>
+        <activity android:name="com.shinsoft.autoprofile.activity.conditions.DateConditionActivity"
+			android:theme="@style/ConditionDialog"
+			android:label="@string/Title_DateCondition_Title"/>
+        <activity android:name="com.shinsoft.autoprofile.activity.conditions.BatteryConditionActivity"
+			android:theme="@style/ConditionDialog"
+			android:label="@string/Title_BatteryCondition_Title"/>
+        
+        <!-- Preferences -->
+        <activity android:name="com.shinsoft.autoprofile.activity.AutoProfilePreferenceActivity" 
+	     	android:label="@string/Title_Preference"/>
+        
+        
+        <!-- Service -->
+        <service 
+        	android:enabled="true" 
+        	android:name="com.shinsoft.autoprofile.service.AutoProfileService"
+        	android:exported="false"
+        	android:label="AutoProfileService"/>
+        
+        <!-- Receiver -->
+        <receiver 
+        	android:enabled="true" 
+        	android:exported="false" 
+        	android:label="BootReceiver" 
+        	android:name="com.shinsoft.autoprofile.service.receiver.BootReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+		
+		<receiver 
+        	android:enabled="true" 
+        	android:exported="false" 
+        	android:label="AutoProfileReceiver" 
+        	android:name="com.shinsoft.autoprofile.service.receiver.AutoProfileReceiver"/>
+		
+    </application>
+    <uses-sdk android:minSdkVersion="8" />
+
+	<!-- Permissions -->
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> 
+	
+</manifest> 

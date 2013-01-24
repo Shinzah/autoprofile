@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<!-- Header -->
+	<LinearLayout
+		android:id="@+id/LayoutHeader"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:background="@android:drawable/dark_header"
+		android:layout_alignParentTop="true">
+		<ImageView 
+			android:id="@+id/LayoutIcon"
+			android:layout_margin="10dip" 
+			android:layout_width="35dip"
+			android:layout_height="35dip"
+		   	android:layout_gravity="left|center_vertical"
+		   	android:adjustViewBounds="true"
+			android:cropToPadding="false"
+			android:focusable="false"/>
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|center_vertical"
+			android:gravity="left"
+			android:orientation="vertical">
+			<TextView 
+				android:id="@+id/LayoutLabel"
+				android:layout_weight="1"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="left|center_vertical"
+				android:textAppearance="@style/ProfileName"
+				android:gravity="left"/>
+			<TextView 
+				android:id="@+id/LayoutLabelSummary"
+				android:layout_weight="1"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="left|center_vertical"
+				android:textAppearance="@style/ProfileSummary"
+				android:gravity="left"/>
+		</LinearLayout>
+	</LinearLayout>
+	
+	<!-- Separator -->
+	<View
+		android:id="@+id/LayoutSeparator"
+		android:background="@android:color/darker_gray"
+		android:layout_height="1dip"
+		android:layout_width="fill_parent"
+		android:layout_marginBottom="1px"
+		android:layout_below="@id/LayoutHeader"/>
+
+	<!-- Body -->
+	<LinearLayout
+		android:id="@+id/LayoutBody"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_gravity="fill_horizontal"
+		android:layout_below="@id/LayoutSeparator"
+		android:paddingTop="10dip"
+		android:paddingBottom="10dip"
+		android:paddingRight="5dip"
+		android:paddingLeft="5dip"/>
+
+	<!-- Buttons -->
+	<LinearLayout
+		android:id="@+id/LayoutButtonBar"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:background="@android:drawable/dark_header"
+		android:padding="5dip"
+		android:layout_alignParentBottom="true">
+		<Button 
+			android:layout_weight="1"
+			android:id="@+id/LayoutSaveBtn"
+			android:text="@string/apply" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:gravity="center"
+			android:textAppearance="@style/Label" />
+		<Button 
+			android:layout_weight="1"
+			android:id="@+id/LayoutCancelBtn"
+			android:text="@string/cancel" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textAppearance="@style/Label" />
+	</LinearLayout>
+
+	<!-- Separator -->
+	<View
+		android:background="@android:color/darker_gray"
+		android:layout_height="1dip"
+		android:layout_width="fill_parent"
+		android:layout_marginTop="1px"
+		android:paddingTop="5dip"
+		android:layout_above="@id/LayoutButtonBar"/>
+
+</RelativeLayout>

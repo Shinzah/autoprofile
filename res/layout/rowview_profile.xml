@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:padding="5dip">
+    
+    <!-- Profile Priority Bar -->
+ 	<com.shinsoft.autoprofile.view.PriorityBar 
+        android:layout_height="fill_parent"
+        android:layout_width="3dp"
+        android:id="@+id/ListProfilePriorityBar"
+        android:focusable="false"/>
+    
+    <!-- Profile Icon -->
+    <ImageView
+		android:id="@+id/ListProfileIcon"
+		android:layout_marginLeft="10dip" 
+		android:layout_marginRight="0dip"
+		android:layout_marginTop="0dip" 
+		android:layout_width="25dip"
+		android:layout_height="25dip"
+	   	android:layout_gravity="center_vertical|center_horizontal"
+	   	android:adjustViewBounds="true"
+		android:cropToPadding="false"
+		android:focusable="false"/>
+		
+	<RelativeLayout
+		android:layout_marginLeft="-5dip"
+		android:layout_marginRight="10dip"
+		android:layout_marginTop="0dip" 
+		android:layout_width="15dip"
+		android:layout_height="15dip"
+		android:gravity="top|right">
+	    <ImageView
+			android:id="@+id/ListProfileIconStatus"
+			android:layout_width="15dip"
+			android:layout_height="15dip"
+		   	android:adjustViewBounds="true"
+			android:cropToPadding="false"
+			android:focusable="false"/>
+	</RelativeLayout>
+	
+    <!-- Profile Informations -->
+    <TextView
+    	android:id="@+id/ListProfileName"
+   		android:layout_width="0dip"
+    	android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="@style/ProfileName"
+        android:gravity="left|center_vertical"
+        android:focusable="false"/>
+        
+    <!-- Profile Icon -->
+    <ImageView
+		android:id="@+id/ListProfileEditIcon"
+		android:layout_width="25dip"
+		android:layout_height="25dip"
+	   	android:layout_gravity="right|center_horizontal|center_vertical"
+	   	android:adjustViewBounds="true"
+		android:cropToPadding="false"
+		android:focusable="false"
+		android:src="@drawable/system"
+		android:clickable="true"/>
+    
+</LinearLayout>

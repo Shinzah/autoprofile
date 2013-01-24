@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- General -->
+	<CheckBoxPreference
+		android:key="@string/PreferenceItemKey_AutoLaunchService"
+		android:title="@string/PreferenceItem_AutoLaunchService"
+		android:summaryOn="@string/PreferenceItemSummary_AutoLaunchService_On"
+		android:summaryOff="@string/PreferenceItemSummary_AutoLaunchService_Off"
+		android:defaultValue="true"/>
+
+	<!-- Display -->
+	<PreferenceScreen android:title="@string/PreferenceScreen_Display">
+	
+		<!-- General -->
+		<PreferenceCategory android:title="@string/PreferenceCategory_General">
+			<CheckBoxPreference
+				android:key="@string/PreferenceItemKey_24hMode"
+				android:title="@string/PreferenceItem_24hMode"
+				android:summaryOn="@string/PreferenceItemSummary_24hMode_On"
+				android:summaryOff="@string/PreferenceItemSummary_24hMode_Off"
+				android:defaultValue="true"/>
+			<ListPreference
+				android:key="@string/PreferenceItemKey_SortBy"
+				android:title="@string/PreferenceItem_SortBy"
+				android:summary="@string/PreferenceItemSummary_SortBy"
+				android:defaultValue="2"
+				android:entries="@array/sortby_label"
+                android:entryValues="@array/sortby_value"/>
+		</PreferenceCategory>
+		
+		<!-- Profile list -->
+		<PreferenceCategory android:title="@string/PreferenceCategory_ListProfiles">
+			<CheckBoxPreference
+				android:key="@string/PreferenceItemKey_ListProfiles_DisplayPriority"
+				android:title="@string/PreferenceItem_ListProfiles_DisplayPriority"
+				android:summaryOn="@string/PreferenceItemSummary_ListProfiles_DisplayPriority_On"
+				android:summaryOff="@string/PreferenceItemSummary_ListProfiles_DisplayPriority_Off"
+				android:defaultValue="true"/>
+			<CheckBoxPreference
+				android:key="@string/PreferenceItemKey_ListProfiles_DisplayTime"
+				android:title="@string/PreferenceItem_ListProfiles_DisplayTime"
+				android:summaryOn="@string/PreferenceItemSummary_ListProfiles_DisplayTime_On"
+				android:summaryOff="@string/PreferenceItemSummary_ListProfiles_DisplayTime_Off"
+				android:defaultValue="true"/>
+			<CheckBoxPreference
+				android:key="@string/PreferenceItemKey_ListProfiles_DisplayDate"
+				android:title="@string/PreferenceItem_ListProfiles_DisplayDate"
+				android:summaryOn="@string/PreferenceItemSummary_ListProfiles_DisplayDate_On"
+				android:summaryOff="@string/PreferenceItemSummary_ListProfiles_DisplayDate_Off"
+				android:defaultValue="true"/>
+			<CheckBoxPreference
+				android:key="@string/PreferenceItemKey_ListProfiles_DisplayBattery"
+				android:title="@string/PreferenceItem_ListProfiles_DisplayBattery"
+				android:summaryOn="@string/PreferenceItemSummary_ListProfiles_DisplayBattery_On"
+				android:summaryOff="@string/PreferenceItemSummary_ListProfiles_DisplayBattery_Off"
+				android:defaultValue="true"/>
+		</PreferenceCategory>
+		
+	
+		
+	</PreferenceScreen>
+
+	<!-- Conditions -->
+	<PreferenceScreen android:title="@string/PreferenceScreen_Conditions">
+	
+	</PreferenceScreen>
+	
+	<!-- Developpement -->
+	<PreferenceCategory android:title="@string/PreferenceCategory_Dev">
+		<CheckBoxPreference
+			android:key="@string/PreferenceItemKey_DebugMode"
+			android:title="@string/PreferenceItem_DebugMode"
+			android:summaryOn="@string/PreferenceItemSummary_DebugMode_On"
+			android:summaryOff="@string/PreferenceItemSummary_DebugMode_Off"/>
+	</PreferenceCategory>
+
+
+
+</PreferenceScreen>
